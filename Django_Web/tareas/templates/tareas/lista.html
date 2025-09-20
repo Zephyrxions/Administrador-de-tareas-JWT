@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de Tareas</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 1rem auto;
+      }
+      th,
+      td {
+        border: 1px solid #aaa;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #eee;
+      }
+      .completada {
+        text-decoration: line-through;
+        color: gray;
+      }
+      .acciones {
+        display: flex;
+        gap: 8px;
+      }
+      .acciones form {
+        display: inline;
+      }
+      /* 👇 Icono de perfil */
+      .profile-container {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+      }
+      .profile-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: #444;
+        user-select: none;
+      }
+      /* 👇 Menú desplegable */
+      .profile-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 45px;
+        background: white;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        width: 120px;
+        text-align: left;
+        z-index: 100;
+      }
+      .profile-menu a {
+        display: block;
+        padding: 8px 10px;
+        text-decoration: none;
+        color: #333;
+      }
+      .profile-menu a:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 👤 Icono de perfil + Menú -->
+    <div class="profile-container">
+      <div class="profile-icon" onclick="toggleMenu()">👤</div>
+      <div class="profile-menu" id="profileMenu">
+        <a href="{% url 'perfil' %}" title="Perfil"> 👤 Perfil</a>
+        <a href="{% url 'logout' %}">🚪 Salir</a>
+      </div>
+    </div>
+
+    <h1 style="text-align: center">Mis Tareas</h1>
+
+    <div style="text-align: center; margin-bottom: 1rem">
+      <a href="{% url 'crear_tarea' %}">➕ Crear nueva tarea</a>
+    </div>
+
+    {% if tareas %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tarea in tareas %}
+            <tr>
+              <td>{{ tarea.id }}</td>
+              <td class="{% if tarea.completada %}completada{% endif %}">
+                {{ tarea.titulo }}
+              </td>
+              <td class="{% if tarea.completada %}completada{% endif %}">
+                {{ tarea.descripcion|default:"(Sin descripción)" }}
+              </td>
+              <td>
+                {% if tarea.completada %}
+                  ✅ Completada
+                {% else %}
+                  ⏳ Pendiente
+                {% endif %}
+              </td>
+              <td class="acciones">
+                <a href="{% url 'completar_tarea' tarea.id %}">
+                  {% if tarea.completada %}
+                    🔄 Desmarcar
+                  {% else %}
+                    ✅ Completar
+                  {% endif %}
+                </a>
+                <a href="{% url 'editar_tarea' tarea.id %}">✏️ Editar</a>
+                <form
+                  action="{% url 'eliminar_tarea' tarea.id %}"
+                  method="POST"
+                  onsubmit="return confirm('¿Estás seguro de eliminar esta tarea?');"
+                >
+                  {% csrf_token %}
+                  <button type="submit">🗑 Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p style="text-align: center">No hay tareas registradas.</p>
+    {% endif %}
+
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById("profileMenu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      }
+
+      // Cerrar el menú si se hace clic fuera de él
+      document.addEventListener("click", function (event) {
+        const menu = document.getElementById("profileMenu");
+        const icon = document.querySelector(".profile-icon");
+        if (!menu.contains(event.target) && !icon.contains(event.target)) {
+          menu.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

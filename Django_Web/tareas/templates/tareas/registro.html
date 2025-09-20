@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro</title>
+    <style>
+      .card {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .form-control {
+        display: block;
+        margin: 0.5rem 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Registro</h1>
+      <form method="POST">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Registrarse</button>
+      </form>
+      <p style="text-align: center; margin-top: 1rem">
+        ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a>
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+            padding: 40px 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        h2 {
+            font-size: 1rem;
+            margin: 0 0 5px 0;
+            color: #444;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        input {
+            width: 100%;
+            padding: 7px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+        }
+        button {
+            margin-top: 5px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+            text-decoration: none;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .actions {
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Mi Perfil</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Card: Información personal -->
+            <div class="card">
+                <h2>🧑 Información personal</h2>
+                {{ form.first_name.label_tag }} {{ form.first_name }}
+                {{ form.last_name.label_tag }} {{ form.last_name }}
+                {{ form.username.label_tag }} {{ form.username }}
+                {{ form.email.label_tag }} {{ form.email }}
+            </div>
+
+            <!-- Card: Cambiar contraseña -->
+            <div class="card">
+                <h2>🔑 Cambiar contraseña</h2>
+                {{ form.password.label_tag }} {{ form.password }}
+            </div>
+
+            <!-- Card: Acciones -->
+            <div class="card actions">
+                <button type="submit">💾 Guardar cambios</button>
+                <a href="{% url 'lista_tareas' %}">⬅ Volver</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
